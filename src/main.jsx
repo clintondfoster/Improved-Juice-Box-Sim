@@ -5,6 +5,7 @@ import {Provider} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
 import store from "./store";
 import "./app.css";
+// require('dotenv').config();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
