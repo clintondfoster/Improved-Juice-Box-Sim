@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 8081;
 const authRoutes = require("./auth/index");
+// const jwt = require("jsonwebtoken");
 
 
 const cors = require('cors');

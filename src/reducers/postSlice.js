@@ -1,6 +1,8 @@
-import { createSlice, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const postSlice = createApi({
+//Define a service with endpoints
+export const postApi = createApi({
     reducerPath: "postApi",
     baseQuery: fetchBaseQuery({ 
         baseUrl: 'http://localhost:8081/',
@@ -18,7 +20,7 @@ export const postSlice = createApi({
             query: () => 'api/posts',
         }),
         getPostById: builder.query({
-            query: (id) => `api/posts/${id}`,
+            query: (id) => 'api/posts/'+id,
         }),
         createPost: builder.mutation({
             query: (body) => ({
@@ -28,24 +30,57 @@ export const postSlice = createApi({
             }),
         }),
         updatePost: builder.mutation({
-            query: ({ id, ...body }) => ({
-                url: `api/posts/${id}`,
+            query: (data) => {
+                const {id, ...body} = data;
+                return {
+                    url: 'api/posts/'+id,
                 method: 'PUT',
                 body,
-            }),
+                }
+            },
         }),
         deletePost: builder.mutation({
             query: (id) => ({
-                url: `api/posts/${id}`,
+                url: 'api/posts/'+id,
                 method: 'DELETE',
             }),
         }),
     }),
 });
+
+const dataSlice = createSlice({
+    name: "data",
+    initialState: {
+        posts: [],
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addMatcher(postApi.endpoints.getPosts.matchFulfilled, (state, {payload})=>{
+            return{
+                ...state,
+                posts: payload
+            }
+        })
+        builder.addMatcher(postApi.endpoints.deletePost.matchFulfilled, (state, {payload}) => {
+            return {
+                ...state,
+                posts: state.posts.filter(i=>i.id !== payload.id)
+            }
+        })
+        builder.addMatcher(postApu.endpoints.createPost.matchFulfilled, (state, {payload})=> {
+            state.posts.push(payload);
+            return state;
+        })
+    }
+})
+
+
 export const {
     useGetPostsQuery,
     useGetPostbyIdQuery,
     useCreatePostMutation,
     useUpdatePostMutation,
     useDeletePostMutation,
-} = postSlice;
+} = postApi;
+
+export default dataSlice.reducer;

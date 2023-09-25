@@ -2,7 +2,6 @@ import { useState }  from "@reduxjs/toolkit";
 import { 
     useLoginMutation,
     useRegistrationMutation,
-    useLoginMutation
     } from "../reducers/authSlice";
 import { useSelector } from "@reduxjs/toolkit";
 import TextInput from "./inputs/TextInput";

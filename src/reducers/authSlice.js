@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { postApi } from './api';
+import { postApi } from './postSlice';
 
 
 const CREDENTIALS = "credentials";
@@ -25,10 +25,7 @@ const authApi = postApi.injectEndpoints({
             })
         }),
         logout: builder.mutation({
-            query: () => ({
-                url: "auth/logout",
-                method: "POST",
-            }),
+            query: () => ({data:{}}),
         })
     })
 })
@@ -57,9 +54,9 @@ const authSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addMatcher(authApi.endpoints.login.matchFulfilled, storeToken);
-        builder.addMatcher(authApi.endpoints.register.matchFulfilled, storeToken);
-        builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
+        builder.addMatcher(postApi.endpoints.login.matchFulfilled, storeToken);
+        builder.addMatcher(postApi.endpoints.register.matchFulfilled, storeToken);
+        builder.addMatcher(postApi.endpoints.logout.matchFulfilled, (state) => {
             console.log("logout")
             state.credentials = {
                 token: '',
